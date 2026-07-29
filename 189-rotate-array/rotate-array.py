@@ -5,8 +5,6 @@ class Solution:
         """
         n=len(nums)
         k%=n
-        if k == 0:
-            return
         def rev(l,r):
             while l<r:
                 nums[l],nums[r]=nums[r],nums[l]
