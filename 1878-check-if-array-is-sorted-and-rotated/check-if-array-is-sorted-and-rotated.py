@@ -1,3 +1,8 @@
 class Solution:
     def check(self, nums: List[int]) -> bool:
-        return sum(nums[i - 1] > nums[i] for i in range(len(nums))) < 2
+       count=0
+       n=len(nums)
+       for i in range(n):
+        if nums[i]>nums[(i+1)%n]:
+            count+=1
+       return count<2
