@@ -1,38 +1,15 @@
 class Solution:
     def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
-        length = m + n
-        gap = (length // 2) + (length % 2)
+        i = m - 1
+        j = n - 1
+        k = m + n - 1
 
-        def get(i):
-            if i < m:
-                return nums1[i]
-            return nums2[i - m]
-
-        def set_val(i, val):
-            if i < m:
-                nums1[i] = val
+        while j >= 0:
+            if i >= 0 and nums1[i] > nums2[j]:
+                nums1[k] = nums1[i]
+                i -= 1
             else:
-                nums2[i - m] = val
+                nums1[k] = nums2[j]
+                j -= 1
 
-        while gap > 0:
-            l = 0
-            r = l + gap
-
-            while r < length:
-                if get(l) > get(r):
-                    a = get(l)
-                    b = get(r)
-
-                    set_val(l, b)
-                    set_val(r, a)
-
-                l += 1
-                r += 1
-
-            if gap == 1:
-                break
-
-            gap = (gap // 2) + (gap % 2)
-
-        for i in range(n):
-            nums1[m + i] = nums2[i]
+            k -= 1
