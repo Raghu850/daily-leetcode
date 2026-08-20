@@ -1,16 +1,14 @@
 class Solution:
     def closeStrings(self, word1: str, word2: str) -> bool:
-        if len(word1)!=len(word2):
+        c1 = Counter(word1)
+        c2 = Counter(word2)
+        v1 = c1.values()
+        v2 = c2.values()
+        k1 = c1.keys()
+        k2 = c2.keys()
+        if sorted(k1) != sorted(k2):
             return False
-        freq1={}
-        freq2={}
-        for i in word1:
-            freq1[i]=freq1.get(i,0)+1
-        for i in word2:
-            freq2[i]=freq2.get(i,0)+1
-        if sorted(freq1.keys()) != sorted(freq2.keys()):
-            return False
-        for i,j in zip(sorted(freq1.values()),sorted(freq2.values())):
-            if i!=j:
+        for val1, val2 in zip(sorted(v1), sorted(v2)):
+            if val1 != val2:
                 return False
         return True
