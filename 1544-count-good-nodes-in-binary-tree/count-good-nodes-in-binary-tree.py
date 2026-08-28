@@ -6,12 +6,9 @@
 #         self.right = right
 class Solution:
     def goodNodes(self, root: TreeNode) -> int:
-
         if root is None:
             return 0
         self.count = 1
-        
-
         def count_good(node, maximum_on_path):
             if not node:
                 return
@@ -20,13 +17,6 @@ class Solution:
                 maximum_on_path = node.val
             count_good(node.left, maximum_on_path)
             count_good(node.right, maximum_on_path)
-
-
         count_good(root.left, root.val)
         count_good(root.right, root.val)
-        return self.count
-
-        
-
-        
-        
+        return self.count    
