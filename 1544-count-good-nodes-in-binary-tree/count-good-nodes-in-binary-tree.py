@@ -6,17 +6,12 @@
 #         self.right = right
 class Solution:
     def goodNodes(self, root: TreeNode) -> int:
-        if root is None:
-            return 0
-        self.count = 1
-        def count_good(node, maximum_on_path):
-            if not node:
-                return
-            if node.val >= maximum_on_path:
-                self.count += 1
-                maximum_on_path = node.val
-            count_good(node.left, maximum_on_path)
-            count_good(node.right, maximum_on_path)
-        count_good(root.left, root.val)
-        count_good(root.right, root.val)
-        return self.count    
+        def dfs(node, max_so_far):
+            if node is None:
+                return 0
+            count = 1 if node.val >= max_so_far else 0
+            new_max = max(max_so_far, node.val)
+
+            return count + dfs(node.left, new_max) + dfs(node.right, new_max)
+
+        return dfs(root, root.val)
