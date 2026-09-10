@@ -1,35 +1,34 @@
 class Solution:
-    def orangesRotting(self, grid: List[List[int]]) -> int:
-        m, n = len(grid), len(grid[0])
-        visited = grid
-        q = collections.deque()
-        countFreshOrange = 0
-        for i in range(m):
-            for j in range(n):
-                if visited[i][j] == 2:
-                    q.append((i, j))
-                if visited[i][j] == 1:
-                    countFreshOrange += 1
-        if countFreshOrange == 0:
-            return 0
-        if not q:
-            return -1
-        
-        minutes = -1
-        dirs = [(1, 0), (-1, 0), (0, -1), (0, 1)]
-        while q:
-            size = len(q)
-            while size > 0:
-                x, y = q.popleft()
-                size -= 1
-                for dx, dy in dirs:
-                    i, j = x + dx, y + dy
-                    if 0 <= i < m and 0 <= j < n and visited[i][j] == 1:
-                        visited[i][j] = 2
-                        countFreshOrange -= 1
-                        q.append((i, j))
-            minutes += 1
-        
-        if countFreshOrange == 0:
-            return minutes
-        return -1
+    def orangesRotting(self, grid):
+        rows, cols = len(grid), len(grid[0])
+        queue = deque()
+        fresh = 0
+
+        # Find rotten and fresh oranges
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 2:
+                    queue.append((r, c, 0))
+                elif grid[r][c] == 1:
+                    fresh += 1
+
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        max_time = 0
+
+        # BFS
+        while queue:
+            r, c, time = queue.popleft()
+            max_time = max(max_time, time)
+
+            for dr, dc in directions:
+                nr, nc = r + dr, c + dc
+
+                if (0 <= nr < rows and
+                    0 <= nc < cols and
+                    grid[nr][nc] == 1):
+
+                    grid[nr][nc] = 2
+                    fresh -= 1
+                    queue.append((nr, nc, time + 1))
+
+        return max_time if fresh == 0 else -1
