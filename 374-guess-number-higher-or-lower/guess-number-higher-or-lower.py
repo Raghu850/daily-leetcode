@@ -4,22 +4,17 @@
 #          1 if num is lower than the picked number
 #          otherwise return 0
 # def guess(num: int) -> int:
-
 class Solution:
-   
     def guessNumber(self, n: int) -> int:
+        left = 1
+        right = n
 
-        low = 1
-        high = n
+        while left <= right:
+            mid = (left + right) // 2
 
-        while low <= high:
-            mid = low + (high - low) // 2
-
-            res = guess(mid)
-
-            if res == 0:
+            if guess(mid) == 0:
                 return mid
-            elif res == 1:
-                low = mid + 1
+            elif guess(mid) == -1:
+                right = mid - 1
             else:
-                high = mid - 1
+                left = mid + 1
