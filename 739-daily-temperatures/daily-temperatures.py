@@ -1,12 +1,13 @@
 class Solution:
-    def dailyTemperatures(self, temps):
-        results = [0] * len(temps)
-        stack = []
-        # UPVOTE !
-        for i, temp in enumerate(temps):
-            while stack and temps[stack[-1]] < temp:
-                index = stack.pop()
-                results[index] = i - index
+    def dailyTemperatures(self, temperatures):
+        answer = [0] * len(temperatures)
+        stack = []  # stores indices
+
+        for i in range(len(temperatures)):
+            while stack and temperatures[i] > temperatures[stack[-1]]:
+                prev = stack.pop()
+                answer[prev] = i - prev
+
             stack.append(i)
 
-        return results
+        return answer
