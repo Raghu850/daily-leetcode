@@ -1,33 +1,40 @@
+from collections import Counter
+from typing import List
+
+
 class Solution:
     def minSumSquareDiff(self, nums1: List[int], nums2: List[int], k1: int, k2: int) -> int:
-        d = [0] * 100001
-        k = k1 + k2
-        total = 0
-        mx = 0
+        diffs = [abs(a - b) for a, b in zip(nums1, nums2)]
+        budget = k1 + k2
 
-        # Step 1: count the differences
-        for a, b in zip(nums1, nums2):
-            x = abs(a - b)
-            d[x] += 1
-            total += x
-            mx = max(mx, x)
-
-        # Enough budget -> every difference becomes 0
-        if total <= k:
+        # Edge case: enough budget to zero out every diff
+        if sum(diffs) <= budget:
             return 0
+        groups = sorted(Counter(diffs).items(), reverse=True)
+        groups.append((0, 0))
+        group_count = 0  
 
-        # Step 2: shave the biggest differences, level by level
-        for i in range(mx, 0, -1):
-            if k <= 0:
-                break
-            move = min(k, d[i])
-            d[i] -= move
-            d[i - 1] += move
-            k -= move
+        for g in range(len(groups) - 1):
+            height, count = groups[g]
+            next_height = groups[g + 1][0]
 
-        # Step 3: add up the squares
-        ans = 0
-        for i in range(mx + 1):
-            ans += i * i * d[i]
+            group_count += count               
+            gap = height - next_height
+            cost_to_absorb = gap * group_count 
 
-        return ans
+            if budget >= cost_to_absorb:
+                budget -= cost_to_absorb
+            else:
+                full_drop = budget // group_count
+                extra_drop_count = budget % group_count
+                new_level = height - full_drop
+
+                result = (
+                    (group_count - extra_drop_count) * new_level ** 2
+                    + extra_drop_count * (new_level - 1) ** 2
+                )
+                for h, c in groups[g + 1:-1]:
+                    result += c * h * h
+                return result
+
+        return 0  
