@@ -1,28 +1,31 @@
 class Solution:
     def myAtoi(self, s: str) -> int:
+        s = s.lstrip()
         if not s:
             return 0
-        INT_MAX=2**31-1
-        INT_MIN=-2**31
-        i=0
-        n=len(s)
-        while i<n and s[i]==' ':
-            i+=1
-        if i==n:
-            return 0
-        sign=1
-        if s[i]=='+':
-            i+=1
-        elif s[i]=='-':
-            i+=1
-            sign=-1
-        res=0
-        while i<n and s[i].isdigit():
-            digit=int(s[i])
-            res=res*10+digit
-            if sign*res<=INT_MIN:
-                return INT_MIN
-            if sign*res>=INT_MAX:
-                return INT_MAX
-            i+=1
-        return res*sign
+        
+        sign = 1
+        i = 0
+        if s[0] == '-':
+            sign = -1
+            i += 1
+        elif s[0] == '+':
+            i += 1
+            
+        result = 0
+        while i < len(s) and s[i].isdigit():
+            result = result * 10 + int(s[i])
+            i += 1
+            
+        result *= sign
+        
+        # Clamp to 32-bit signed integer range
+        INT_MIN, INT_MAX = -2**31, 2**31 - 1
+        if result < INT_MIN:
+            return INT_MIN
+        if result > INT_MAX:
+            return INT_MAX
+            
+        return result
+
+        
