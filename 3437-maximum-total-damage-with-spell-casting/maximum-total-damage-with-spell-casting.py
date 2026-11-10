@@ -1,21 +1,34 @@
 class Solution:
     def maximumTotalDamage(self, power: List[int]) -> int:
-        freq = Counter(power)
-        keys = sorted(freq)
-        n = len(keys)
-        dp = [0] * n
-        dp[0] = freq[keys[0]] * keys[0]
-        for i in range(1, n):
-            take = freq[keys[i]] * keys[i]
-            l, r, ans = 0, i - 1, -1
-            while l <= r:
-                mid = (l + r) // 2
-                if keys[mid] <= keys[i] - 3:
-                    ans = mid
-                    l = mid + 1
-                else:
-                    r = mid - 1
-            if ans >= 0:
-                take += dp[ans]
-            dp[i] = max(dp[i - 1], take)
-        return dp[-1]
+        
+        
+        # dp = [0] * (max(power)+1)
+        power.sort()
+
+        dp1, dp2, dp3 = 0, 0, 0
+        prev = None
+        prev_prev = None
+        i = 0
+        
+        while i < len(power):
+            p = power[i]
+            curr_p = p
+            while i + 1 < len(power) and power[i + 1] == p:
+                curr_p += p
+                i += 1
+
+            if prev == None:
+                dp1 = curr_p
+            elif p - prev > 2:
+                dp1, dp2, dp3 = dp1 + curr_p, dp1, dp2
+            elif prev_prev and p - prev_prev > 2:
+                dp1, dp2, dp3 = max(dp1, dp2+curr_p), dp1, dp2
+            else:
+                dp1, dp2, dp3 = max(dp1, dp3+curr_p), dp1, dp2
+
+            prev, prev_prev = p, prev
+            i += 1
+        
+        return max(dp1, dp2, dp3)
+            
+
